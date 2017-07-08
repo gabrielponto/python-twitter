@@ -4660,7 +4660,7 @@ class Api(object):
                 data = self._ParseAndCheckTwitter(line.decode('utf-8'))
                 yield data
 
-    def VerifyCredentials(self, include_entities=None, skip_status=None, include_email=None):
+    def VerifyCredentials(self, include_entities='false', skip_status='false', include_email='false'):
         """Returns a twitter.User instance if the authenticating user is valid.
 
         Args:
@@ -4677,15 +4677,18 @@ class Api(object):
             not whitelisted, then the 'email' key will not be present in the json
             response.
 
+        All these args must be string, like 'true' or 'false', because
+        twitter only works with string
+
         Returns:
           A twitter.User instance representing that user if the
           credentials are valid, None otherwise.
         """
         url = '%s/account/verify_credentials.json' % self.base_url
         data = {
-            'include_entities': enf_type('include_entities', bool, include_entities),
-            'skip_status': enf_type('skip_status', bool, skip_status),
-            'include_email': enf_type('include_email', bool, include_email)
+            'include_entities': enf_type('include_entities', str, include_entities),
+            'skip_status': enf_type('skip_status', str, skip_status),
+            'include_email': enf_type('include_email', str, include_email)
         }
 
         resp = self._RequestUrl(url, 'GET', data)
